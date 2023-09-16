@@ -1,6 +1,7 @@
 import pygame as pg
 import math
 from pygame.math import Vector2 as vect2
+import random as rand
 
 pg.init()
 
@@ -32,18 +33,13 @@ class obj_:
 
 c = vect2(700 / 2, 600 /2)
 
-ball1 = obj_(c,c, vect2(0, 0))
-ball2 = obj_(c + vect2(0,50) ,c + vect2(0,50) , vect2(0, 0))
-
-
-
 
 class Solver:
     def __init__(self, gravity):
         self.gravity: vect2 = gravity
 
     def update(self, dt):
-        self.sub_steps = 2
+        self.sub_steps = 3
         self.sub_dt = dt / float(self.sub_steps)
 
         for i in range(self.sub_steps, 0, -1):
@@ -99,12 +95,19 @@ while Running:
 
     solver.update(dt)
 
-    mouse_pos : vect2 = pg.mouse.get_pos()
+    
+
+
+    mouse_x = pg.mouse.get_pos()[0]
+    mouse_y = pg.mouse.get_pos()[1]
+
+    mouse_pos = vect2(mouse_x,mouse_y)
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
             Running = False
         if event.type == pg.MOUSEBUTTONUP:
-            new_obj = obj_(mouse_pos, mouse_pos, vect2(0, 0))
+            if math.sqrt((mouse_pos.x - 700 / 2) ** 2 + (mouse_pos.y - 600 / 2) ** 2) <= 158.55:
+                new_obj = obj_(mouse_pos, mouse_pos, vect2(0, 0))
 
     pg.display.update()
