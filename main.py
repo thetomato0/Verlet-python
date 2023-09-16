@@ -18,6 +18,7 @@ class obj_:
         self.pos_current: vect2 = pos_current
         self.pos_old: vect2 = pos_old
         self.accel: vect2 = accel
+        obj.append(self)
 
     def update(self, gravity, dt):
         self.accel += gravity
@@ -29,13 +30,12 @@ class obj_:
     def accelerate(self, acc):
         self.accel += acc
 
+c = vect2(700 / 2, 600 /2)
 
-ball1 = obj_(vect2(700 / 2, 600 / 2), vect2(700 / 2, 600 / 2), vect2(0, 0))
-ball2 = obj_(vect2(700 / 2, 600 / 2 + 50), vect2(700 / 2, 600 / 2 + 50), vect2(0, 0))
-ball3 = obj_(vect2(700 / 2 + 50, 600 / 2), vect2(700 / 2, 600 / 2 + 50), vect2(0, 0))
-obj.append(ball1)
-obj.append(ball2)
-obj.append(ball3)
+ball1 = obj_(c,c, vect2(0, 0))
+ball2 = obj_(c + vect2(0,50) ,c + vect2(0,50) , vect2(0, 0))
+
+
 
 
 class Solver:
@@ -80,10 +80,10 @@ class Solver:
                 self.coll_axis: vect2 = obj[i].pos_current - obj[k].pos_current
                 self.dist = math.sqrt(self.coll_axis.x ** 2 + self.coll_axis.y ** 2)
                 if self.dist < 20:
-                    self.n = self.coll_axis / self.dist
-                    self.delta: float = 20 - self.dist
-                    obj[i].pos_current += 0.5 * self.delta * self.n
-                    obj[k].pos_current -= 0.5 * self.delta * self.n
+                        self.n = self.coll_axis / self.dist
+                        self.delta: float = 20 - self.dist
+                        obj[i].pos_current += 0.5 * self.delta * self.n
+                        obj[k].pos_current -= 0.5 * self.delta * self.n
 
 
 gravity = vect2(0, 1000.0)
@@ -99,8 +99,12 @@ while Running:
 
     solver.update(dt)
 
+    mouse_pos : vect2 = pg.mouse.get_pos()
+
     for event in pg.event.get():
         if event.type == pg.QUIT:
             Running = False
+        if event.type == pg.MOUSEBUTTONUP:
+            new_obj = obj_(mouse_pos, mouse_pos, vect2(0, 0))
 
     pg.display.update()
